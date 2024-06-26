@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-
+void main() {
+  runApp(const MaterialApp(
+    home: TicTacToeGame(),
+  ));
+}
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -62,6 +66,33 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     });
   }
 
+  void _showResetDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Reset Game'),
+          content: const Text('Are you sure you want to reset the game?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _resetGame();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Reset'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +102,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            _result.isEmpty
+                ? 'Turn: ${_xTurn ? 'X' : 'O'}'
+                : _result,
+            style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
           GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -102,13 +140,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             },
           ),
           const SizedBox(height: 20),
-          Text(
-            _result,
-            style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: _resetGame,
+            onPressed: _showResetDialog,
             child: const Text('Reset Game'),
           ),
         ],
